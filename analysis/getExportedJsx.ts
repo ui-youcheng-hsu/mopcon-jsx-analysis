@@ -20,9 +20,8 @@ export default function getExportedJsx(sourceNode: ts.SourceFile) {
     const jsxNodes = getTagNames(node).map((n) => {
       const { tagName } = n;
       const importData = imports.find(
-        ({ defaultImport, subImports }) =>
-          defaultImport === tagName ||
-          subImports.some(([, asName]) => asName === tagName)
+        ({ defaultImport, subImportMap }) =>
+          defaultImport === tagName || !!subImportMap[tagName]
       );
       if (!importData) {
         return {
@@ -42,7 +41,7 @@ export default function getExportedJsx(sourceNode: ts.SourceFile) {
     });
     return {
       jsxNodes,
-      methodName: funcNode && getFunctionIdentifier(funcNode),
+      methodName: funcNode && getFunctionIdentifier(funcNode)?.text,
       isExport,
       isDefaultExport,
     };
@@ -50,7 +49,7 @@ export default function getExportedJsx(sourceNode: ts.SourceFile) {
 
   return {
     fileName: sourceNode.fileName,
-    sourceNode,
+    // sourceNode,
     jsxNodes,
   };
 }

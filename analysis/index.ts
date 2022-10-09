@@ -3,6 +3,7 @@ import getExportedJsx from "./getExportedJsx";
 
 async function start() {
   const sourceNode = await getAstNode("./src/App.tsx");
-  getExportedJsx(sourceNode);
+  const data = getExportedJsx(sourceNode);
+  return data;
 }
 start();

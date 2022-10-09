@@ -23,10 +23,10 @@ export function getJsxElements(sourceNode: ts.Node): ts.JsxElement[] {
 }
 
 type ImportCollection = {
-  node: ts.ImportDeclaration;
+  // node: ts.ImportDeclaration;
   path: string;
   defaultImport?: string;
-  subImports: [import: string, as: string][];
+  // subImports: [import: string, as: string][];
   subImportMap: Record<string, [import: string, as: string]>;
 };
 
@@ -36,7 +36,7 @@ export function getImportNodes(sourceNode: ts.Node) {
     const flag = ts.isImportDeclaration(node);
     if (flag) {
       const { moduleSpecifier, importClause } = node;
-      const subImports: [import: string, as: string][] = [];
+      // const subImports: [import: string, as: string][] = [];
       const subImportMap: Record<string, [import: string, as: string]> = {};
       importClause?.namedBindings?.forEachChild((n) => {
         const { name, propertyName } = n as ts.ImportSpecifier;
@@ -44,14 +44,14 @@ export function getImportNodes(sourceNode: ts.Node) {
           (propertyName || name).text,
           name.text,
         ];
-        subImports.push(tuple);
+        // subImports.push(tuple);
         subImportMap[name.text] = tuple;
       });
       arr.push({
-        node,
+        // node,
         path: (moduleSpecifier as ts.StringLiteral).text,
         defaultImport: importClause?.name?.text,
-        subImports,
+        // subImports,
         subImportMap,
       });
     } else {
@@ -103,13 +103,13 @@ export function getClosestFunctionScope(
   return parent || null;
 }
 
-export function getFunctionIdentifier(node: ts.SignatureDeclaration) {
+export function getFunctionIdentifier(
+  node: ts.SignatureDeclaration
+): ts.Identifier | undefined {
   if (ts.isFunctionDeclaration(node) && node.name) return node.name;
 
   let parent = (node as ParentTrackable).__parent__;
   while (parent && (parent as any).name) {
     parent = (node as ParentTrackable).__parent__;
   }
-
-  return parent;
 }
